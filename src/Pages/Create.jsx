@@ -43,45 +43,52 @@ const Create = () => {
       return true;
     }
   };
+  // 
+  const validate = (prompt, category)=>{
+        // validation starts
+        if (!category) {
+          Swal.fire(
+            "Select Category",
+            "Select a Category from the dropdown",
+            "error"
+          );
+          return false;
+        }
+        if (!prompt) {
+          Swal.fire("Write a Prompt", "Write a prompt in the input", "error");
+          return;
+        }
+        if (!prompt) {
+          Swal.fire("Write a Prompt", "Write a prompt in the input", "error");
+          return false;
+        }
+        if (prompt.trim().length < 20) {
+          Swal.fire(
+            "Invalid Prompt",
+            "make your prompt bigger (minimum 20 character)",
+            "error"
+          );
+          return false;
+        }
+        //validation End
+        console.log({ prompt, category });
+        const finalPrompt = `imagine a ${category} : ${prompt}`;
+        console.log(finalPrompt);
+        return true;
+  }
+  // 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!checkUser()) return;
-
+    // 
     const form = e.target;
     const prompt = form.prompt.value;
     const category = form.category.value;
-    // validation starts
-    if (!category) {
-      Swal.fire(
-        "Select Category",
-        "Select a Category from the dropdown",
-        "error"
-      );
-      return;
+    if(!validate(prompt, category)) {
+      return 
     }
-    if (!prompt) {
-      Swal.fire("Write a Prompt", "Write a prompt in the input", "error");
-      return;
-    }
-    if (!prompt) {
-      Swal.fire("Write a Prompt", "Write a prompt in the input", "error");
-      return;
-    }
-    if (prompt.trim().length < 20) {
-      Swal.fire(
-        "Invalid Prompt",
-        "make your prompt bigger (minimum 20 character)",
-        "error"
-      );
-      return;
-    }
-    //validation End
 
-    console.log({ prompt, category });
-    const finalPrompt = `imagine a ${category} : ${prompt}`;
-    console.log(finalPrompt);
-    return;
   };
   return (
     <div>
