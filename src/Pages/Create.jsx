@@ -43,53 +43,90 @@ const Create = () => {
       return true;
     }
   };
+  //
+  const validate = (prompt, category) => {
+    // validation starts
+    if (!category) {
+      Swal.fire(
+        "Select Category",
+        "Select a Category from the dropdown",
+        "error"
+      );
+      return false;
+    }
+    if (!prompt) {
+      Swal.fire("Write a Prompt", "Write a prompt in the input", "error");
+      return;
+    }
+    if (!prompt) {
+      Swal.fire("Write a Prompt", "Write a prompt in the input", "error");
+      return false;
+    }
+    if (prompt.trim().length < 20) {
+      Swal.fire(
+        "Invalid Prompt",
+        "make your prompt bigger (minimum 20 character)",
+        "error"
+      );
+      return false;
+    }
+    //validation End
+    console.log({ prompt, category });
+    const finalPrompt = `imagine a ${category} : ${prompt}`;
+    console.log(finalPrompt);
+    return true;
+  };
+  //
+  // const getImageBuffer = async (prompt, category) => {
+  //   const finalPrompt = `image a ${category} : ${prompt}`;
+  //   //
+  //   const formValue = new FormData();
+  //   formValue.append("prompt", finalPrompt);
+
+  //   const response = await fetch("https://clipdrop-api.co/text-to-image/v1", {
+  //     method: "POST",
+  //     headers: {
+  //       "x-api-key": import.meta.env.VITE_clipdrop_api,
+  //     },
+  //     body: formValue,
+  //   });
+  //   const buffer = await response.arrayBuffer();
+  //   return buffer ;
+
+  // };
   // 
-  const validate = (prompt, category)=>{
-        // validation starts
-        if (!category) {
-          Swal.fire(
-            "Select Category",
-            "Select a Category from the dropdown",
-            "error"
-          );
-          return false;
-        }
-        if (!prompt) {
-          Swal.fire("Write a Prompt", "Write a prompt in the input", "error");
-          return;
-        }
-        if (!prompt) {
-          Swal.fire("Write a Prompt", "Write a prompt in the input", "error");
-          return false;
-        }
-        if (prompt.trim().length < 20) {
-          Swal.fire(
-            "Invalid Prompt",
-            "make your prompt bigger (minimum 20 character)",
-            "error"
-          );
-          return false;
-        }
-        //validation End
-        console.log({ prompt, category });
-        const finalPrompt = `imagine a ${category} : ${prompt}`;
-        console.log(finalPrompt);
-        return true;
+  const genarateImageUrl = async(buffer)=>{
+    const blob = new Blob([buffer], { type: "image/png" });
+    const form = new FormData();
+    form.append("image", blob)
+    const response = await fetch(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMAGE_BB_API_KEY}`,{
+      method:"POST",
+      body:form
+    });
+    const imageUrl = await response.json();
+    return imageUrl
   }
-  // 
-  const handleSubmit = (e) => {
+  //
+  const handleSubmit = async(e) => {
     e.preventDefault();
 
     if (!checkUser()) return;
-    // 
+    //
     const form = e.target;
     const prompt = form.prompt.value;
     const category = form.category.value;
-    if(!validate(prompt, category)) {
-      return 
+    if (!validate(prompt, category)) {
+      return;
     }
-
+    // 
+    const buffer = await getImageBuffer(prompt,category);
+    // 
+    const imageUrl = await genarateImageUrl(buffer);
+    console.log(imageUrl);
   };
+
+
+  //
   return (
     <div>
       <PageTitle>🌱Let&apos;s Create 🐦‍🔥</PageTitle>
