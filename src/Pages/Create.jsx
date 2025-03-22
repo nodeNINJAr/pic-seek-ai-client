@@ -77,23 +77,23 @@ const Create = () => {
     return true;
   };
   //
-  // const getImageBuffer = async (prompt, category) => {
-  //   const finalPrompt = `image a ${category} : ${prompt}`;
-  //   //
-  //   const formValue = new FormData();
-  //   formValue.append("prompt", finalPrompt);
+  const getImageBuffer = async (prompt, category) => {
+    const finalPrompt = `image a ${category} : ${prompt}`;
+    //
+    const formValue = new FormData();
+    formValue.append("prompt", finalPrompt);
+    //  
+    const response = await fetch("https://clipdrop-api.co/text-to-image/v1", {
+      method: "POST",
+      headers: {
+        "x-api-key": import.meta.env.VITE_clipdrop_api,
+      },
+      body: formValue,
+    });
+    const buffer = await response.arrayBuffer();
+    return buffer ;
 
-  //   const response = await fetch("https://clipdrop-api.co/text-to-image/v1", {
-  //     method: "POST",
-  //     headers: {
-  //       "x-api-key": import.meta.env.VITE_clipdrop_api,
-  //     },
-  //     body: formValue,
-  //   });
-  //   const buffer = await response.arrayBuffer();
-  //   return buffer ;
-
-  // };
+  };
   // 
   const genarateImageUrl = async(buffer)=>{
     const blob = new Blob([buffer], { type: "image/png" });
